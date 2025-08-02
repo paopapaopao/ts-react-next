@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { QueryKey } from '../enumerations';
+import { HttpMethod, QueryKey } from '../enumerations';
 import type {
   CommentInfiniteQuery,
   CommentMutation,
@@ -32,7 +32,7 @@ export const useDeleteComment = (
   return useMutation({
     mutationFn: async (id: number | undefined): Promise<CommentMutation> => {
       const response = await fetch(`/api/comments/${id}`, {
-        method: 'DELETE',
+        method: HttpMethod.DELETE,
       });
 
       const result: CommentMutation = await response.json();

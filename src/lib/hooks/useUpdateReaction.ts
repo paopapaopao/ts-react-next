@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { QueryKey } from '../enumerations';
+import { HttpMethod, QueryKey } from '../enumerations';
 import type {
   CommentInfiniteQuery,
   CommentsContext,
@@ -56,7 +56,7 @@ export const useUpdateReaction = ({
       payload,
     }: ReactionVariables): Promise<ReactionMutation> => {
       const response = await fetch(`/api/reactions/${id}`, {
-        method: 'PUT',
+        method: HttpMethod.PUT,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
