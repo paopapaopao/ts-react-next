@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod } from '@/lib/enumerations';
+import { HttpMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { postSchema } from '@/lib/schemas';
 import type { PostMutation, PostQuery, PostSchema } from '@/lib/types';
 import {
@@ -72,7 +72,7 @@ export const GET = async (
             errors: null,
           }),
           {
-            status: 404,
+            status: HttpResponseStatusCode.NotFound,
             headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
           }
         )
@@ -91,13 +91,13 @@ export const GET = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.Ok,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.readPost[status];
 
     console.error(message, error);
@@ -153,7 +153,7 @@ export const PUT = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.authorizeUser[status];
 
     console.error(message, error);
@@ -200,13 +200,13 @@ export const PUT = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.Ok,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.updatePost[status];
 
     console.error(message, error);
@@ -262,7 +262,7 @@ export const DELETE = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.authorizeUser[status];
 
     console.error(message, error);
@@ -296,13 +296,13 @@ export const DELETE = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.Ok,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.deletePost[status];
 
     console.error(message, error);
@@ -325,7 +325,7 @@ export const DELETE = async (
 export const OPTIONS = (): NextResponse<null> => {
   return responseWithCors<null>(
     new NextResponse(null, {
-      status: 204,
+      status: HttpResponseStatusCode.NoContent,
       headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
     })
   );

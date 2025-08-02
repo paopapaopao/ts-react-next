@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod } from '@/lib/enumerations';
+import { HttpMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { commentSchema } from '@/lib/schemas';
 import type { CommentMutation, CommentSchema } from '@/lib/types';
 import {
@@ -59,7 +59,7 @@ export const PUT = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.authorizeUser[status];
 
     console.error(message, error);
@@ -106,13 +106,13 @@ export const PUT = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.Ok,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.updateComment[status];
 
     console.error(message, error);
@@ -168,7 +168,7 @@ export const DELETE = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.authorizeUser[status];
 
     console.error(message, error);
@@ -202,13 +202,13 @@ export const DELETE = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.Ok,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.deleteComment[status];
 
     console.error(message, error);
@@ -231,7 +231,7 @@ export const DELETE = async (
 export const OPTIONS = (): NextResponse<null> => {
   return responseWithCors<null>(
     new NextResponse(null, {
-      status: 204,
+      status: HttpResponseStatusCode.NoContent,
       headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
     })
   );

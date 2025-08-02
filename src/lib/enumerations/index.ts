@@ -6,6 +6,16 @@ export enum HttpMethod {
   OPTIONS = 'OPTIONS',
 }
 
+export enum HttpResponseStatusCode {
+  Ok = 200,
+  NoContent = 204,
+  BadRequest = 400,
+  Unauthenticated = 401,
+  Unauthorized = 403,
+  NotFound = 404,
+  InternalServerError = 500,
+}
+
 export enum QueryKey {
   POSTS = 'POSTS',
   COMMENTS = 'COMMENTS',

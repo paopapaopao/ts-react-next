@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
 import { API_RESPONSE_MESSAGES } from '../constants';
+import { HttpResponseStatusCode } from '../enumerations';
 
 import { responseWithCors } from './responseWithCors';
 
@@ -17,7 +18,7 @@ export const authenticateUser = async <TResponse>(
     const { userId } = await auth();
 
     if (userId === null) {
-      const status = 401;
+      const status = HttpResponseStatusCode.Unauthenticated;
 
       return {
         response: responseWithCors<TResponse>(
@@ -40,7 +41,7 @@ export const authenticateUser = async <TResponse>(
 
     return { userId, isAuthenticated: true };
   } catch (error: unknown) {
-    const status = 500;
+    const status = HttpResponseStatusCode.InternalServerError;
     const message = API_RESPONSE_MESSAGES.authenticateUser[status];
 
     console.error(message, error);

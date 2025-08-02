@@ -8,6 +8,7 @@ import {
 } from '@prisma/client';
 
 import { API_RESPONSE_MESSAGES } from '../constants';
+import { HttpResponseStatusCode } from '../enumerations';
 
 import { responseWithCors } from './responseWithCors';
 
@@ -22,7 +23,7 @@ export const authorizeUser = <TResponse>(
   const isAUser = user?.role === UserRole.USER;
 
   if (!(isAnAdmin || (isAUser && user?.clerkId === record?.clerkUserId))) {
-    const status = 403;
+    const status = HttpResponseStatusCode.Unauthorized;
 
     return {
       response: responseWithCors<TResponse>(
