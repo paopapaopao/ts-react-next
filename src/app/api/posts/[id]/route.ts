@@ -1,6 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
 import { HttpMethod } from '@/lib/enumerations';
 import { postSchema } from '@/lib/schemas';
@@ -96,16 +97,19 @@ export const GET = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Post find unique error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.readPost[status];
+
+    console.error(message, error);
 
     return responseWithCors<PostQuery>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['Post find unique failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -149,16 +153,19 @@ export const PUT = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    console.error('Authorize user error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.authorizeUser[status];
+
+    console.error(message, error);
 
     return responseWithCors<PostMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Authorize user failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -199,16 +206,19 @@ export const PUT = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Update post error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.updatePost[status];
+
+    console.error(message, error);
 
     return responseWithCors<PostMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Update post failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -252,16 +262,19 @@ export const DELETE = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    console.error('Authorize user error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.authorizeUser[status];
+
+    console.error(message, error);
 
     return responseWithCors<PostMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Authorize user failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -289,16 +302,19 @@ export const DELETE = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Delete post error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.deletePost[status];
+
+    console.error(message, error);
 
     return responseWithCors<PostMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Delete post failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )

@@ -7,6 +7,8 @@ import {
   UserRole,
 } from '@prisma/client';
 
+import { API_RESPONSE_MESSAGES } from '../constants';
+
 import { responseWithCors } from './responseWithCors';
 
 export const authorizeUser = <TResponse>(
@@ -19,21 +21,25 @@ export const authorizeUser = <TResponse>(
   const isAnAdmin = user?.role === UserRole.ADMIN;
   const isAUser = user?.role === UserRole.USER;
 
-  return isAnAdmin || (isAUser && user?.clerkId === record?.clerkUserId)
-    ? { isAuthorized: true }
-    : {
-        response: responseWithCors<TResponse>(
-          new NextResponse(
-            JSON.stringify({
-              data: null,
-              errors: { auth: ['User unauthorized'] },
-            }),
-            {
-              status: 403,
-              headers: { 'Access-Control-Allow-Methods': allowedMethods },
-            }
-          )
-        ),
-        isAuthorized: false,
-      };
+  if (!(isAnAdmin || (isAUser && user?.clerkId === record?.clerkUserId))) {
+    const status = 403;
+
+    return {
+      response: responseWithCors<TResponse>(
+        new NextResponse(
+          JSON.stringify({
+            data: null,
+            errors: { auth: [API_RESPONSE_MESSAGES.authorizeUser[status]] },
+          }),
+          {
+            status,
+            headers: { 'Access-Control-Allow-Methods': allowedMethods },
+          }
+        )
+      ),
+      isAuthorized: false,
+    };
+  }
+
+  return { isAuthorized: true };
 };

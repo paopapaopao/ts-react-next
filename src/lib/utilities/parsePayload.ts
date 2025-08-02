@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { type ZodSchema } from 'zod';
 
+import { API_RESPONSE_MESSAGES } from '../constants';
+
 import { responseWithCors } from './responseWithCors';
 
 export const parsePayload = async <TSchema, TResponse>(
@@ -33,17 +35,20 @@ export const parsePayload = async <TSchema, TResponse>(
           isParsed: false,
         };
   } catch (error: unknown) {
-    console.error('Parse payload error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.parsePayload[status];
+
+    console.error(message, error);
 
     return {
       response: responseWithCors<TResponse>(
         new NextResponse(
           JSON.stringify({
             data: null,
-            errors: { server: ['Parse payload failed'] },
+            errors: { server: [message] },
           }),
           {
-            status: 500,
+            status,
             headers: { 'Access-Control-Allow-Methods': allowedMethods },
           }
         )

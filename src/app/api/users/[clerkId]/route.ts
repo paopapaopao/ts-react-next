@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
 import { HttpMethod } from '@/lib/enumerations';
 import type { UserQuery } from '@/lib/types';
@@ -58,16 +59,19 @@ export const GET = async (
       )
     );
   } catch (error: unknown) {
-    console.error('User find unique error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.readUser[status];
+
+    console.error(message, error);
 
     return responseWithCors<UserQuery>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['User find unique failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )

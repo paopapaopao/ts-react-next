@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 
-import { REPLIES_READ_COUNT } from '@/lib/constants';
+import { API_RESPONSE_MESSAGES, REPLIES_READ_COUNT } from '@/lib/constants';
 import { prisma } from '@/lib/database';
 import { HttpMethod } from '@/lib/enumerations';
 import type { CommentInfiniteQuery } from '@/lib/types';
@@ -89,16 +89,19 @@ export const GET = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Reply find many error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.readReplies[status];
+
+    console.error(message, error);
 
     return responseWithCors<CommentInfiniteQuery>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['Reply find many failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )

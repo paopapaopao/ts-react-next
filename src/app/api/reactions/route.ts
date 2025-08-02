@@ -1,6 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
 import { HttpMethod } from '@/lib/enumerations';
 import { reactionSchema } from '@/lib/schemas';
@@ -56,16 +57,19 @@ export const POST = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Reaction create error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.createReaction[status];
+
+    console.error(message, error);
 
     return responseWithCors<ReactionMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['Reaction create failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )

@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 
-import { POSTS_READ_COUNT } from '@/lib/constants';
+import { API_RESPONSE_MESSAGES, POSTS_READ_COUNT } from '@/lib/constants';
 import { prisma } from '@/lib/database';
 import { HttpMethod } from '@/lib/enumerations';
 import { postSchema } from '@/lib/schemas';
@@ -62,16 +62,19 @@ export const POST = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Post create error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.createPost[status];
+
+    console.error(message, error);
 
     return responseWithCors<PostMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['Post create failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -182,16 +185,19 @@ export const GET = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Post find many error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.readPosts[status];
+
+    console.error(message, error);
 
     return responseWithCors<PostInfiniteQuery>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['Post find many failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )

@@ -1,6 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
 import { HttpMethod } from '@/lib/enumerations';
 import { commentSchema } from '@/lib/schemas';
@@ -57,16 +58,19 @@ export const POST = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Comment create error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.createComment[status];
+
+    console.error(message, error);
 
     return responseWithCors<CommentMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['Comment create failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )

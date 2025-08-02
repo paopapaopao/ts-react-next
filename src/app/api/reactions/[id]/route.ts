@@ -1,6 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
 import { HttpMethod } from '@/lib/enumerations';
 import { reactionSchema } from '@/lib/schemas';
@@ -58,16 +59,19 @@ export const PUT = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    console.error('Authorize user error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.authorizeUser[status];
+
+    console.error(message, error);
 
     return responseWithCors<ReactionMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Authorize user failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -107,16 +111,19 @@ export const PUT = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Update reaction error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.updateReaction[status];
+
+    console.error(message, error);
 
     return responseWithCors<ReactionMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Update reaction failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -160,16 +167,19 @@ export const DELETE = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    console.error('Authorize user error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.authorizeUser[status];
+
+    console.error(message, error);
 
     return responseWithCors<ReactionMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Authorize user failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -197,16 +207,19 @@ export const DELETE = async (
       )
     );
   } catch (error: unknown) {
-    console.error('Delete reaction error:', error);
+    const status = 500;
+    const message = API_RESPONSE_MESSAGES.deleteReaction[status];
+
+    console.error(message, error);
 
     return responseWithCors<ReactionMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { server: ['Delete reaction failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
