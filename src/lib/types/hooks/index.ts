@@ -1,5 +1,7 @@
 import { type InfiniteData } from '@tanstack/react-query';
 
+import { QueryContextKey } from '@/lib/enumerations';
+
 import type {
   CommentInfiniteQuery,
   PostInfiniteQuery,
@@ -7,13 +9,13 @@ import type {
 } from '../api-responses';
 import type { CommentSchema, PostSchema, ReactionSchema } from '../schemas';
 
-type Variables<TId, TPayload> = {
-  id: TId;
-  payload: TPayload;
+type Variables<Id, Payload> = {
+  id: Id;
+  payload: Payload;
 };
 
-type Context<KData extends string, TData> = {
-  [key in KData]: TData | undefined;
+type Context<Key extends string, Data> = {
+  [key in Key]: Data | undefined;
 };
 
 export type PageParam = { pageParam: number | null };
@@ -22,14 +24,14 @@ export type CommentVariables = Variables<number | undefined, CommentSchema>;
 export type PostVariables = Variables<number | undefined, PostSchema>;
 export type ReactionVariables = Variables<string, ReactionSchema>;
 
+export type PostContext = Context<QueryContextKey.Post, PostQuery>;
+
 export type CommentsContext = Context<
-  'previousComments',
+  QueryContextKey.Comments,
   InfiniteData<CommentInfiniteQuery, number | null>
 >;
 
-export type PostContext = Context<'previousPost', PostQuery>;
-
 export type PostsContext = Context<
-  'previousPosts',
+  QueryContextKey.Posts,
   InfiniteData<PostInfiniteQuery, number | null>
 >;

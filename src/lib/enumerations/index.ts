@@ -32,6 +32,12 @@ export enum QueryKey {
   REPLIES = 'REPLIES',
 }
 
+export enum QueryContextKey {
+  Post = 'previousPost',
+  Comments = 'previousComments',
+  Posts = 'previousPosts',
+}
+
 export enum Mode {
   VIEW,
   EDIT,

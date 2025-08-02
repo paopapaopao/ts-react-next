@@ -13,18 +13,18 @@ import type {
   PostWithRelationsAndRelationCountsAndUserReaction,
 } from '../action-returns';
 
-type ApiQueryResponse<KData extends string, TData> = {
-  data: { [key in KData]: TData | null } | null;
+type ApiQueryResponse<Key extends string, Data> = {
+  data: { [key in Key]: Data | null } | null;
   errors: { [key: string]: string[] } | null;
 };
 
-type ApiInfiniteQueryResponse<KData extends string, TData> = {
-  data: ({ [key in KData]: TData[] } & { nextCursor: number | null }) | null;
+type ApiInfiniteQueryResponse<Key extends string, Data> = {
+  data: ({ [key in Key]: Data[] } & { nextCursor: number | null }) | null;
   errors: { [key: string]: string[] } | null;
 };
 
-type ApiMutationResponse<KData extends string, TData> = {
-  data: { [key in KData]: TData | null } | null;
+type ApiMutationResponse<Key extends string, Data> = {
+  data: { [key in Key]: Data | null } | null;
   errors: { [key: string]: string[] } | null;
 };
 
