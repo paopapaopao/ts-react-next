@@ -6,6 +6,8 @@ import {
   type View,
 } from '@prisma/client';
 
+import { ApiResponseDataKey } from '@/lib/enumerations';
+
 import type {
   CommentWithRelationsAndRelationCountsAndUserReaction,
   PostWithRelationsAndRelationCountsAndUserReaction,
@@ -27,23 +29,32 @@ type ApiMutationResponse<KData extends string, TData> = {
 };
 
 export type PostQuery = ApiQueryResponse<
-  'post',
+  ApiResponseDataKey.Post,
   PostWithRelationsAndRelationCountsAndUserReaction
 >;
 
-export type UserQuery = ApiQueryResponse<'user', User>;
+export type UserQuery = ApiQueryResponse<ApiResponseDataKey.User, User>;
 
 export type CommentInfiniteQuery = ApiInfiniteQueryResponse<
-  'comments',
+  ApiResponseDataKey.Comments,
   CommentWithRelationsAndRelationCountsAndUserReaction
 >;
 
 export type PostInfiniteQuery = ApiInfiniteQueryResponse<
-  'posts',
+  ApiResponseDataKey.Posts,
   PostWithRelationsAndRelationCountsAndUserReaction
 >;
 
-export type CommentMutation = ApiMutationResponse<'comment', Comment>;
-export type PostMutation = ApiMutationResponse<'post', Post>;
-export type ReactionMutation = ApiMutationResponse<'reaction', Reaction>;
-export type ViewMutation = ApiMutationResponse<'view', View>;
+export type CommentMutation = ApiMutationResponse<
+  ApiResponseDataKey.Comment,
+  Comment
+>;
+
+export type PostMutation = ApiMutationResponse<ApiResponseDataKey.Post, Post>;
+
+export type ReactionMutation = ApiMutationResponse<
+  ApiResponseDataKey.Reaction,
+  Reaction
+>;
+
+export type ViewMutation = ApiMutationResponse<ApiResponseDataKey.View, View>;

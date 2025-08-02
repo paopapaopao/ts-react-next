@@ -16,6 +16,16 @@ export enum HttpResponseStatusCode {
   InternalServerError = 500,
 }
 
+export enum ApiResponseDataKey {
+  User = 'user',
+  Post = 'post',
+  Comment = 'comment',
+  Reaction = 'reaction',
+  View = 'view',
+  Posts = 'posts',
+  Comments = 'comments',
+}
+
 export enum QueryKey {
   POSTS = 'POSTS',
   COMMENTS = 'COMMENTS',
