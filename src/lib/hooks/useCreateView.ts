@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { HttpMethod, QueryKey } from '../enumerations';
+import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type { ViewMutation, ViewSchema } from '../types';
 
 export const useCreateView = (): UseMutationResult<
@@ -19,7 +19,7 @@ export const useCreateView = (): UseMutationResult<
   return useMutation({
     mutationFn: async (payload: ViewSchema): Promise<ViewMutation> => {
       const response = await fetch('/api/views', {
-        method: HttpMethod.POST,
+        method: HttpRequestMethod.POST,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });

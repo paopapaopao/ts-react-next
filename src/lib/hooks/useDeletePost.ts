@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { HttpMethod } from '../enumerations';
+import { HttpRequestMethod } from '../enumerations';
 import type {
   PostContext,
   PostInfiniteQuery,
@@ -31,7 +31,7 @@ export const useDeletePost = (
   return useMutation({
     mutationFn: async (id: number | undefined): Promise<PostMutation> => {
       const response = await fetch(`/api/posts/${id}`, {
-        method: HttpMethod.DELETE,
+        method: HttpRequestMethod.DELETE,
       });
 
       const result: PostMutation = await response.json();

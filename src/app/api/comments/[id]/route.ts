@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod, HttpResponseStatusCode } from '@/lib/enumerations';
+import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { commentSchema } from '@/lib/schemas';
 import type { CommentMutation, CommentSchema } from '@/lib/types';
 import {
@@ -18,9 +18,9 @@ type Params = {
 };
 
 const ALLOWED_METHODS = [
-  HttpMethod.PUT,
-  HttpMethod.DELETE,
-  HttpMethod.OPTIONS,
+  HttpRequestMethod.PUT,
+  HttpRequestMethod.DELETE,
+  HttpRequestMethod.OPTIONS,
 ].join(', ');
 
 export const PUT = async (

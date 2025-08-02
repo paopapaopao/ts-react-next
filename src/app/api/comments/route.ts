@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod, HttpResponseStatusCode } from '@/lib/enumerations';
+import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { commentSchema } from '@/lib/schemas';
 import type { CommentMutation, CommentSchema } from '@/lib/types';
 import {
@@ -12,7 +12,10 @@ import {
   responseWithCors,
 } from '@/lib/utilities';
 
-const ALLOWED_METHODS = [HttpMethod.POST, HttpMethod.OPTIONS].join(', ');
+const ALLOWED_METHODS = [
+  HttpRequestMethod.POST,
+  HttpRequestMethod.OPTIONS,
+].join(', ');
 
 export const POST = async (
   request: NextRequest

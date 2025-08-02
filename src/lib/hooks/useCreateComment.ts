@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { HttpMethod, QueryKey } from '../enumerations';
+import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type {
   CommentInfiniteQuery,
   CommentMutation,
@@ -32,7 +32,7 @@ export const useCreateComment = (
   return useMutation({
     mutationFn: async (payload: CommentSchema): Promise<CommentMutation> => {
       const response = await fetch('/api/comments', {
-        method: HttpMethod.POST,
+        method: HttpRequestMethod.POST,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });

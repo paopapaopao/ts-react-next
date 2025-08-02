@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 
 import { API_RESPONSE_MESSAGES, POSTS_READ_COUNT } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod, HttpResponseStatusCode } from '@/lib/enumerations';
+import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { postSchema } from '@/lib/schemas';
 import type { PostInfiniteQuery, PostMutation, PostSchema } from '@/lib/types';
 import {
@@ -14,9 +14,9 @@ import {
 } from '@/lib/utilities';
 
 const ALLOWED_METHODS = [
-  HttpMethod.POST,
-  HttpMethod.GET,
-  HttpMethod.OPTIONS,
+  HttpRequestMethod.POST,
+  HttpRequestMethod.GET,
+  HttpRequestMethod.OPTIONS,
 ].join(', ');
 
 export const POST = async (

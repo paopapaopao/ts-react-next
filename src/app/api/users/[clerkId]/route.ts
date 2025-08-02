@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod, HttpResponseStatusCode } from '@/lib/enumerations';
+import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import type { UserQuery } from '@/lib/types';
 import { authenticateUser, responseWithCors } from '@/lib/utilities';
 
@@ -10,7 +10,9 @@ type Params = {
   params: Promise<{ clerkId: string }>;
 };
 
-const ALLOWED_METHODS = [HttpMethod.GET, HttpMethod.OPTIONS].join(', ');
+const ALLOWED_METHODS = [HttpRequestMethod.GET, HttpRequestMethod.OPTIONS].join(
+  ', '
+);
 
 export const GET = async (
   _: NextRequest,
