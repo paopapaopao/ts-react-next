@@ -59,7 +59,7 @@ export const PUT = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    const status = HttpResponseStatusCode.InternalServerError;
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
     const message = API_RESPONSE_MESSAGES.authorizeUser[status];
 
     console.error(message, error);
@@ -106,13 +106,13 @@ export const PUT = async (
           errors: null,
         }),
         {
-          status: HttpResponseStatusCode.Ok,
+          status: HttpResponseStatusCode.OK,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    const status = HttpResponseStatusCode.InternalServerError;
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
     const message = API_RESPONSE_MESSAGES.updateComment[status];
 
     console.error(message, error);
@@ -168,7 +168,7 @@ export const DELETE = async (
       return authorizeUserResult.response;
     }
   } catch (error: unknown) {
-    const status = HttpResponseStatusCode.InternalServerError;
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
     const message = API_RESPONSE_MESSAGES.authorizeUser[status];
 
     console.error(message, error);
@@ -202,13 +202,13 @@ export const DELETE = async (
           errors: null,
         }),
         {
-          status: HttpResponseStatusCode.Ok,
+          status: HttpResponseStatusCode.OK,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    const status = HttpResponseStatusCode.InternalServerError;
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
     const message = API_RESPONSE_MESSAGES.deleteComment[status];
 
     console.error(message, error);
@@ -231,7 +231,7 @@ export const DELETE = async (
 export const OPTIONS = (): NextResponse<null> => {
   return responseWithCors<null>(
     new NextResponse(null, {
-      status: HttpResponseStatusCode.NoContent,
+      status: HttpResponseStatusCode.NO_CONTENT,
       headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
     })
   );

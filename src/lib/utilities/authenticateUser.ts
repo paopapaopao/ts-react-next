@@ -18,7 +18,7 @@ export const authenticateUser = async <TResponse>(
     const { userId } = await auth();
 
     if (userId === null) {
-      const status = HttpResponseStatusCode.Unauthenticated;
+      const status = HttpResponseStatusCode.UNAUTHENTICATED;
 
       return {
         response: responseWithCors<TResponse>(
@@ -41,7 +41,7 @@ export const authenticateUser = async <TResponse>(
 
     return { userId, isAuthenticated: true };
   } catch (error: unknown) {
-    const status = HttpResponseStatusCode.InternalServerError;
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
     const message = API_RESPONSE_MESSAGES.authenticateUser[status];
 
     console.error(message, error);

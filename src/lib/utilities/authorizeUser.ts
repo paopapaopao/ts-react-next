@@ -23,7 +23,7 @@ export const authorizeUser = <TResponse>(
   const isAUser = user?.role === UserRole.USER;
 
   if (!(isAnAdmin || (isAUser && user?.clerkId === record?.clerkUserId))) {
-    const status = HttpResponseStatusCode.Unauthorized;
+    const status = HttpResponseStatusCode.UNAUTHORIZED;
 
     return {
       response: responseWithCors<TResponse>(

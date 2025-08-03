@@ -28,7 +28,7 @@ export const parsePayload = async <TSchema, TResponse>(
                 errors: parsedPayload.error?.flatten().fieldErrors,
               }),
               {
-                status: HttpResponseStatusCode.BadRequest,
+                status: HttpResponseStatusCode.BAD_REQUEST,
                 headers: { 'Access-Control-Allow-Methods': allowedMethods },
               }
             )
@@ -36,7 +36,7 @@ export const parsePayload = async <TSchema, TResponse>(
           isParsed: false,
         };
   } catch (error: unknown) {
-    const status = HttpResponseStatusCode.InternalServerError;
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
     const message = API_RESPONSE_MESSAGES.parsePayload[status];
 
     console.error(message, error);

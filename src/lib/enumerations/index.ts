@@ -7,35 +7,35 @@ export enum HttpRequestMethod {
 }
 
 export enum HttpResponseStatusCode {
-  Ok = 200,
-  NoContent = 204,
-  BadRequest = 400,
-  Unauthenticated = 401,
-  Unauthorized = 403,
-  NotFound = 404,
-  InternalServerError = 500,
+  OK = 200,
+  NO_CONTENT = 204,
+  BAD_REQUEST = 400,
+  UNAUTHENTICATED = 401,
+  UNAUTHORIZED = 403,
+  NOT_FOUND = 404,
+  INTERNAL_SERVER_ERROR = 500,
 }
 
 export enum ApiResponseDataKey {
-  User = 'user',
-  Post = 'post',
-  Comment = 'comment',
-  Reaction = 'reaction',
-  View = 'view',
-  Posts = 'posts',
-  Comments = 'comments',
+  USER = 'user',
+  POST = 'post',
+  COMMENT = 'comment',
+  REACTION = 'reaction',
+  VIEW = 'view',
+  POSTS = 'posts',
+  COMMENTS = 'comments',
 }
 
 export enum QueryKey {
-  POSTS = 'POSTS',
-  COMMENTS = 'COMMENTS',
-  REPLIES = 'REPLIES',
+  POSTS = 'posts',
+  COMMENTS = 'comments',
+  REPLIES = 'replies',
 }
 
 export enum QueryContextKey {
-  Post = 'previousPost',
-  Comments = 'previousComments',
-  Posts = 'previousPosts',
+  POST = 'previousPost',
+  POSTS = 'previousPosts',
+  COMMENTS = 'previousComments',
 }
 
 export enum Mode {

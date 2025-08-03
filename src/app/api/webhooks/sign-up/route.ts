@@ -29,7 +29,7 @@ export const POST = async (request: NextRequest) => {
     console.error(error);
 
     return new Response('Bad Request', {
-      status: HttpResponseStatusCode.BadRequest,
+      status: HttpResponseStatusCode.BAD_REQUEST,
     });
   }
 
@@ -51,5 +51,5 @@ export const POST = async (request: NextRequest) => {
     }
   }
 
-  return new Response('OK', { status: HttpResponseStatusCode.Ok });
+  return new Response('OK', { status: HttpResponseStatusCode.OK });
 };

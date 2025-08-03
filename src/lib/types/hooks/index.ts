@@ -24,14 +24,14 @@ export type CommentVariables = Variables<number | undefined, CommentSchema>;
 export type PostVariables = Variables<number | undefined, PostSchema>;
 export type ReactionVariables = Variables<string, ReactionSchema>;
 
-export type PostContext = Context<QueryContextKey.Post, PostQuery>;
+export type PostContext = Context<QueryContextKey.POST, PostQuery>;
 
 export type CommentsContext = Context<
-  QueryContextKey.Comments,
+  QueryContextKey.COMMENTS,
   InfiniteData<CommentInfiniteQuery, number | null>
 >;
 
 export type PostsContext = Context<
-  QueryContextKey.Posts,
+  QueryContextKey.POSTS,
   InfiniteData<PostInfiniteQuery, number | null>
 >;
