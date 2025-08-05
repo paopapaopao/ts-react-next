@@ -26,6 +26,12 @@ export enum ApiResponseDataKey {
   COMMENTS = 'comments',
 }
 
+export enum ApiReadResourceCount {
+  POSTS = 8,
+  COMMENTS = 4,
+  REPLIES = 2,
+}
+
 export enum QueryKey {
   POSTS = 'posts',
   COMMENTS = 'comments',

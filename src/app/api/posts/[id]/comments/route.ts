@@ -1,9 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 
-import { API_RESPONSE_MESSAGES, COMMENTS_READ_COUNT } from '@/lib/constants';
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
+import {
+  ApiReadResourceCount,
+  HttpRequestMethod,
+  HttpResponseStatusCode,
+} from '@/lib/enumerations';
 import type { CommentInfiniteQuery } from '@/lib/types';
 import { authenticateUser, responseWithCors } from '@/lib/utilities';
 
@@ -55,7 +59,7 @@ export const GET = async (
           where: { clerkUserId: userId },
         },
       },
-      take: COMMENTS_READ_COUNT,
+      take: ApiReadResourceCount.COMMENTS,
       orderBy: { createdAt: Prisma.SortOrder.asc },
     });
 

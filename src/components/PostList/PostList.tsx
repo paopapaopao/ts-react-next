@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { type ReactNode, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { POSTS_READ_COUNT } from '@/lib/constants';
+import { ApiReadResourceCount } from '@/lib/enumerations';
 import { useReadPosts } from '@/lib/hooks';
 import type { PostWithRelationsAndRelationCountsAndUserReaction } from '@/lib/types';
 
@@ -48,14 +48,16 @@ export const PostList = ({
 
   return isPending ? (
     <ul className={clsx('self-stretch', classNames)}>
-      {Array.from({ length: POSTS_READ_COUNT }).map((_, index: number) => (
-        <li
-          key={`post-skeleton-${index}`}
-          className='self-stretch'
-        >
-          <PostCardSkeleton className='mx-auto min-w-[344px] max-w-screen-xl' />
-        </li>
-      ))}
+      {Array.from({ length: ApiReadResourceCount.POSTS }).map(
+        (_, index: number) => (
+          <li
+            key={`post-skeleton-${index}`}
+            className='self-stretch'
+          >
+            <PostCardSkeleton className='mx-auto min-w-[344px] max-w-screen-xl' />
+          </li>
+        )
+      )}
     </ul>
   ) : isError ? (
     <p className='text-red-600'>{error.message}</p>

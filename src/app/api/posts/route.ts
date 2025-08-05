@@ -2,9 +2,13 @@ import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 
-import { API_RESPONSE_MESSAGES, POSTS_READ_COUNT } from '@/lib/constants';
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
+import {
+  ApiReadResourceCount,
+  HttpRequestMethod,
+  HttpResponseStatusCode,
+} from '@/lib/enumerations';
 import { postSchema } from '@/lib/schemas';
 import type { PostInfiniteQuery, PostMutation, PostSchema } from '@/lib/types';
 import {
@@ -153,7 +157,7 @@ export const GET = async (
           where: { clerkUserId },
         },
       },
-      take: POSTS_READ_COUNT,
+      take: ApiReadResourceCount.POSTS,
       orderBy: { updatedAt: Prisma.SortOrder.desc },
     });
 
