@@ -25,7 +25,7 @@ export const User = (): ReactNode => {
         className='rounded-full'
       />
       <Link
-        href={`/users/${post?.user?.id}`}
+        href={`/users/${post?.user.id}`}
         className='font-bold text-card-foreground hover:text-green-600'
       >
         {getName(post?.user)}
