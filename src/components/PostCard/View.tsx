@@ -21,7 +21,10 @@ export const View = (): ReactNode => {
   return (
     <div className={classNames}>
       {pathname === '/' || pathname === '/search' ? (
-        <Link href={`/posts/${post?.id}`}>
+        <Link
+          href={`/posts/${post?.id}`}
+          scroll={false}
+        >
           <h4 className='text-lg font-bold text-card-foreground hover:text-green-600'>
             {post?.title}
           </h4>
