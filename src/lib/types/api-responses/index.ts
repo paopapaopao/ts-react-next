@@ -28,16 +28,11 @@ type ApiMutationResponse<Key extends string, Data> = {
   errors: { [key: string]: string[] } | null;
 };
 
+export type UserQuery = ApiQueryResponse<ApiResponseDataKey.USER, User>;
+
 export type PostQuery = ApiQueryResponse<
   ApiResponseDataKey.POST,
   PostWithRelationsAndRelationCountsAndUserReaction
->;
-
-export type UserQuery = ApiQueryResponse<ApiResponseDataKey.USER, User>;
-
-export type CommentInfiniteQuery = ApiInfiniteQueryResponse<
-  ApiResponseDataKey.COMMENTS,
-  CommentWithRelationsAndRelationCountsAndUserReaction
 >;
 
 export type PostInfiniteQuery = ApiInfiniteQueryResponse<
@@ -45,12 +40,17 @@ export type PostInfiniteQuery = ApiInfiniteQueryResponse<
   PostWithRelationsAndRelationCountsAndUserReaction
 >;
 
+export type CommentInfiniteQuery = ApiInfiniteQueryResponse<
+  ApiResponseDataKey.COMMENTS,
+  CommentWithRelationsAndRelationCountsAndUserReaction
+>;
+
+export type PostMutation = ApiMutationResponse<ApiResponseDataKey.POST, Post>;
+
 export type CommentMutation = ApiMutationResponse<
   ApiResponseDataKey.COMMENT,
   Comment
 >;
-
-export type PostMutation = ApiMutationResponse<ApiResponseDataKey.POST, Post>;
 
 export type ReactionMutation = ApiMutationResponse<
   ApiResponseDataKey.REACTION,

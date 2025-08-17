@@ -14,24 +14,22 @@ type Variables<Id, Payload> = {
   payload: Payload;
 };
 
-type Context<Key extends string, Data> = {
-  [key in Key]: Data | undefined;
-};
+type Context<Key extends string, Data> = { [key in Key]: Data | undefined };
 
 export type PageParam = { pageParam: number | null };
 
-export type CommentVariables = Variables<number | undefined, CommentSchema>;
 export type PostVariables = Variables<number | undefined, PostSchema>;
+export type CommentVariables = Variables<number | undefined, CommentSchema>;
 export type ReactionVariables = Variables<string, ReactionSchema>;
 
 export type PostContext = Context<QueryContextKey.POST, PostQuery>;
 
-export type CommentsContext = Context<
-  QueryContextKey.COMMENTS,
-  InfiniteData<CommentInfiniteQuery, number | null>
->;
-
 export type PostsContext = Context<
   QueryContextKey.POSTS,
   InfiniteData<PostInfiniteQuery, number | null>
+>;
+
+export type CommentsContext = Context<
+  QueryContextKey.COMMENTS,
+  InfiniteData<CommentInfiniteQuery, number | null>
 >;
