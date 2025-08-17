@@ -26,6 +26,7 @@ export const Form = (): ReactNode => {
     defaultValues: {
       body: comment?.body,
       userId: comment?.userId,
+      clerkUserId: comment?.clerkUserId,
       postId: comment?.postId,
       parentCommentId: comment?.parentCommentId,
     },

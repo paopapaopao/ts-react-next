@@ -31,6 +31,7 @@ export const CommentForm = ({ parentCommentId = null }: Props): ReactNode => {
     defaultValues: {
       body: '',
       userId: signedInUser?.id,
+      clerkUserId: signedInUser?.clerkId,
       postId: post?.id,
       parentCommentId,
     },
