@@ -1,6 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { type ZodSchema } from 'zod';
 
+import { API_RESPONSE_MESSAGES } from '../constants';
+import { HttpResponseStatusCode } from '../enumerations';
+
 import { responseWithCors } from './responseWithCors';
 
 export const parsePayload = async <TSchema, TResponse>(
@@ -25,7 +28,7 @@ export const parsePayload = async <TSchema, TResponse>(
                 errors: parsedPayload.error?.flatten().fieldErrors,
               }),
               {
-                status: 400,
+                status: HttpResponseStatusCode.BAD_REQUEST,
                 headers: { 'Access-Control-Allow-Methods': allowedMethods },
               }
             )
@@ -33,17 +36,20 @@ export const parsePayload = async <TSchema, TResponse>(
           isParsed: false,
         };
   } catch (error: unknown) {
-    console.error('Parse payload error:', error);
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
+    const message = API_RESPONSE_MESSAGES.parsePayload[status];
+
+    console.error(message, error);
 
     return {
       response: responseWithCors<TResponse>(
         new NextResponse(
           JSON.stringify({
             data: null,
-            errors: { server: ['Parse payload failed'] },
+            errors: { server: [message] },
           }),
           {
-            status: 500,
+            status,
             headers: { 'Access-Control-Allow-Methods': allowedMethods },
           }
         )

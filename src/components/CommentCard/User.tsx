@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
+import Link from 'next/link';
 import { type ReactNode } from 'react';
 
 import defaultProfilePhoto from '@/assets/images/default-profile-photo.jpg';
@@ -31,9 +32,12 @@ export const User = ({ children }: Props): ReactNode => {
         className='rounded-full'
       />
       <div className={contentClassNames}>
-        <span className='text-sm font-bold text-comment-card-foreground'>
+        <Link
+          href={`/users/${comment?.user.id}`}
+          className='text-sm font-bold text-comment-card-foreground hover:text-green-600'
+        >
           {getName(comment?.user)}
-        </span>
+        </Link>
         {children}
       </div>
     </div>

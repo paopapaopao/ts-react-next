@@ -3,6 +3,9 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
+import { API_RESPONSE_MESSAGES } from '../constants';
+import { HttpResponseStatusCode } from '../enumerations';
+
 import { responseWithCors } from './responseWithCors';
 
 export const authenticateUser = async <TResponse>(
@@ -14,35 +17,44 @@ export const authenticateUser = async <TResponse>(
   try {
     const { userId } = await auth();
 
-    return userId === null
-      ? {
-          response: responseWithCors<TResponse>(
-            new NextResponse(
-              JSON.stringify({
-                data: null,
-                errors: { auth: ['User unauthenticated'] },
-              }),
-              {
-                status: 401,
-                headers: { 'Access-Control-Allow-Methods': allowedMethods },
-              }
-            )
-          ),
-          isAuthenticated: false,
-        }
-      : { userId, isAuthenticated: true };
+    if (userId === null) {
+      const status = HttpResponseStatusCode.UNAUTHENTICATED;
+
+      return {
+        response: responseWithCors<TResponse>(
+          new NextResponse(
+            JSON.stringify({
+              data: null,
+              errors: {
+                auth: [API_RESPONSE_MESSAGES.authenticateUser[status]],
+              },
+            }),
+            {
+              status,
+              headers: { 'Access-Control-Allow-Methods': allowedMethods },
+            }
+          )
+        ),
+        isAuthenticated: false,
+      };
+    }
+
+    return { userId, isAuthenticated: true };
   } catch (error: unknown) {
-    console.error('Authenticate user error:', error);
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
+    const message = API_RESPONSE_MESSAGES.authenticateUser[status];
+
+    console.error(message, error);
 
     return {
       response: responseWithCors<TResponse>(
         new NextResponse(
           JSON.stringify({
             data: null,
-            errors: { server: ['Authenticate user failed'] },
+            errors: { server: [message] },
           }),
           {
-            status: 500,
+            status,
             headers: { 'Access-Control-Allow-Methods': allowedMethods },
           }
         )

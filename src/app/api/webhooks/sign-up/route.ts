@@ -1,7 +1,9 @@
 import { type NextRequest } from 'next/server';
 import { Webhook } from 'svix';
 import { type WebhookEvent } from '@clerk/nextjs/server';
+
 import { prisma } from '@/lib/database';
+import { HttpResponseStatusCode } from '@/lib/enumerations';
 
 const webhookSecret =
   process.env.SIGNING_SECRET || 'whsec_Kzi2hVWuwn5dMPVFqALiIY2eBaX+1mv7';
@@ -26,7 +28,9 @@ export const POST = async (request: NextRequest) => {
   } catch (error) {
     console.error(error);
 
-    return new Response('Bad Request', { status: 400 });
+    return new Response('Bad Request', {
+      status: HttpResponseStatusCode.BAD_REQUEST,
+    });
   }
 
   const eventType = msg.type;
@@ -47,5 +51,5 @@ export const POST = async (request: NextRequest) => {
     }
   }
 
-  return new Response('OK', { status: 200 });
+  return new Response('OK', { status: HttpResponseStatusCode.OK });
 };

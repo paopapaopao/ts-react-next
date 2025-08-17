@@ -7,7 +7,7 @@ import {
   viewSchema,
 } from '@/lib/schemas';
 
-export type CommentSchema = z.infer<typeof commentSchema>;
 export type PostSchema = z.infer<typeof postSchema>;
+export type CommentSchema = z.infer<typeof commentSchema>;
 export type ReactionSchema = z.infer<typeof reactionSchema>;
 export type ViewSchema = z.infer<typeof viewSchema>;

@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod } from '@/lib/enumerations';
+import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import type { UserQuery } from '@/lib/types';
 import { authenticateUser, responseWithCors } from '@/lib/utilities';
 
@@ -9,7 +10,9 @@ type Params = {
   params: Promise<{ clerkId: string }>;
 };
 
-const ALLOWED_METHODS = [HttpMethod.GET, HttpMethod.OPTIONS].join(', ');
+const ALLOWED_METHODS = [HttpRequestMethod.GET, HttpRequestMethod.OPTIONS].join(
+  ', '
+);
 
 export const GET = async (
   _: NextRequest,
@@ -38,7 +41,7 @@ export const GET = async (
             errors: null,
           }),
           {
-            status: 404,
+            status: HttpResponseStatusCode.NOT_FOUND,
             headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
           }
         )
@@ -52,22 +55,25 @@ export const GET = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.OK,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    console.error('User find unique error:', error);
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
+    const message = API_RESPONSE_MESSAGES.readUser[status];
+
+    console.error(message, error);
 
     return responseWithCors<UserQuery>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['User find unique failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -78,7 +84,7 @@ export const GET = async (
 export const OPTIONS = (): NextResponse<null> => {
   return responseWithCors<null>(
     new NextResponse(null, {
-      status: 204,
+      status: HttpResponseStatusCode.NO_CONTENT,
       headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
     })
   );

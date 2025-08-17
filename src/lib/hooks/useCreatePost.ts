@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { QueryKey } from '../enumerations';
+import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type {
   PostInfiniteQuery,
   PostMutation,
@@ -29,7 +29,7 @@ export const useCreatePost = (): UseMutationResult<
   return useMutation({
     mutationFn: async (payload: PostSchema): Promise<PostMutation> => {
       const response = await fetch('/api/posts', {
-        method: 'POST',
+        method: HttpRequestMethod.POST,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });

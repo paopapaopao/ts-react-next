@@ -1,9 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 
-import { REPLIES_READ_COUNT } from '@/lib/constants';
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod } from '@/lib/enumerations';
+import {
+  ApiReadResourceCount,
+  HttpRequestMethod,
+  HttpResponseStatusCode,
+} from '@/lib/enumerations';
 import type { CommentInfiniteQuery } from '@/lib/types';
 import { authenticateUser, responseWithCors } from '@/lib/utilities';
 
@@ -14,7 +18,9 @@ type Params = {
   }>;
 };
 
-const ALLOWED_METHODS = [HttpMethod.GET, HttpMethod.OPTIONS].join(', ');
+const ALLOWED_METHODS = [HttpRequestMethod.GET, HttpRequestMethod.OPTIONS].join(
+  ', '
+);
 
 export const GET = async (
   request: NextRequest,
@@ -57,7 +63,7 @@ export const GET = async (
           where: { clerkUserId: userId },
         },
       },
-      take: REPLIES_READ_COUNT,
+      take: ApiReadResourceCount.REPLIES,
       orderBy: { createdAt: Prisma.SortOrder.asc },
     });
 
@@ -83,22 +89,25 @@ export const GET = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.OK,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    console.error('Reply find many error:', error);
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
+    const message = API_RESPONSE_MESSAGES.readReplies[status];
+
+    console.error(message, error);
 
     return responseWithCors<CommentInfiniteQuery>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['Reply find many failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -109,7 +118,7 @@ export const GET = async (
 export const OPTIONS = (): NextResponse<null> => {
   return responseWithCors<null>(
     new NextResponse(null, {
-      status: 204,
+      status: HttpResponseStatusCode.NO_CONTENT,
       headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
     })
   );

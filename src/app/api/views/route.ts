@@ -1,8 +1,9 @@
 import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { API_RESPONSE_MESSAGES } from '@/lib/constants';
 import { prisma } from '@/lib/database';
-import { HttpMethod } from '@/lib/enumerations';
+import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { viewSchema } from '@/lib/schemas';
 import type { ViewMutation, ViewSchema } from '@/lib/types';
 import {
@@ -11,7 +12,10 @@ import {
   responseWithCors,
 } from '@/lib/utilities';
 
-const ALLOWED_METHODS = [HttpMethod.POST, HttpMethod.OPTIONS].join(', ');
+const ALLOWED_METHODS = [
+  HttpRequestMethod.POST,
+  HttpRequestMethod.OPTIONS,
+].join(', ');
 
 export const POST = async (
   request: NextRequest
@@ -51,22 +55,25 @@ export const POST = async (
           errors: null,
         }),
         {
-          status: 200,
+          status: HttpResponseStatusCode.OK,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
     );
   } catch (error: unknown) {
-    console.error('View create error:', error);
+    const status = HttpResponseStatusCode.INTERNAL_SERVER_ERROR;
+    const message = API_RESPONSE_MESSAGES.createView[status];
+
+    console.error(message, error);
 
     return responseWithCors<ViewMutation>(
       new NextResponse(
         JSON.stringify({
           data: null,
-          errors: { database: ['View create failed'] },
+          errors: { server: [message] },
         }),
         {
-          status: 500,
+          status,
           headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
         }
       )
@@ -77,7 +84,7 @@ export const POST = async (
 export const OPTIONS = (): NextResponse<null> => {
   return responseWithCors<null>(
     new NextResponse(null, {
-      status: 204,
+      status: HttpResponseStatusCode.NO_CONTENT,
       headers: { 'Access-Control-Allow-Methods': ALLOWED_METHODS },
     })
   );
