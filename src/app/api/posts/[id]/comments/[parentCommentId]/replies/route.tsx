@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 import {
   ApiReadResourceCount,
   HttpRequestMethod,
@@ -42,7 +42,7 @@ export const GET = async (
     const id = Number((await params).id);
     const parentCommentId = Number((await params).parentCommentId);
 
-    const response = await prisma.comment.findMany({
+    const response = await database.comment.findMany({
       ...(cursor > 0 && {
         cursor: { id: cursor },
         skip: 1,

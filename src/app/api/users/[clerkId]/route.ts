@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import type { UserQuery } from '@/lib/types';
 import { authenticateUser, responseWithCors } from '@/lib/utilities';
@@ -29,7 +29,7 @@ export const GET = async (
   try {
     const clerkId = (await params).clerkId;
 
-    const response = await prisma.user.findUnique({
+    const response = await database.user.findUnique({
       where: { clerkId },
     });
 

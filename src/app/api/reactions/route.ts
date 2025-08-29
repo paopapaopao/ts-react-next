@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { reactionSchema } from '@/lib/schemas';
 import type { ReactionMutation, ReactionSchema } from '@/lib/types';
@@ -40,7 +40,7 @@ export const POST = async (
   try {
     const { parsedPayload } = parsePayloadResult;
 
-    const response = await prisma.reaction.create({
+    const response = await database.reaction.create({
       data: parsedPayload,
     });
 
