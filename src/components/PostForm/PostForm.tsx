@@ -34,7 +34,8 @@ export const PostForm = ({ className = '' }: Props): ReactNode => {
     },
   });
 
-  const { mutate: createPost } = useCreatePost();
+  const queryKey = { userId: undefined, clerkUserId: null, query: null };
+  const { mutate: createPost } = useCreatePost(queryKey);
 
   // TODO: Refactor
   useEffect((): void => {

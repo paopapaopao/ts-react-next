@@ -17,7 +17,17 @@ import type {
 
 import { useSignedInUser } from './useSignedInUser';
 
-export const useCreatePost = (): UseMutationResult<
+type Params = {
+  userId: undefined;
+  clerkUserId: null;
+  query: null;
+};
+
+export const useCreatePost = ({
+  userId,
+  clerkUserId,
+  query,
+}: Params): UseMutationResult<
   PostMutation,
   Error,
   PostSchema,
@@ -25,6 +35,7 @@ export const useCreatePost = (): UseMutationResult<
 > => {
   const queryClient = useQueryClient();
   const { signedInUser } = useSignedInUser();
+  const queryKey = { userId, clerkUserId, query };
 
   return useMutation({
     mutationFn: async (payload: PostSchema): Promise<PostMutation> => {
@@ -45,14 +56,14 @@ export const useCreatePost = (): UseMutationResult<
     onMutate: async (
       payload: PostSchema
     ): Promise<PostsContext | undefined> => {
-      await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS] });
+      await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS, queryKey] });
 
       const previousPosts = queryClient.getQueryData<
         InfiniteData<PostInfiniteQuery, number | null>
-      >([QueryKey.POSTS]);
+      >([QueryKey.POSTS, queryKey]);
 
       queryClient.setQueryData(
-        [QueryKey.POSTS],
+        [QueryKey.POSTS, queryKey],
         // TODO
         (
           oldPosts: InfiniteData<PostInfiniteQuery, number | null> | undefined
@@ -104,14 +115,14 @@ export const useCreatePost = (): UseMutationResult<
     },
     onError: (_error, _payload, context: PostsContext | undefined): void => {
       if (context?.previousPosts !== undefined) {
-        queryClient.setQueryData([QueryKey.POSTS], context.previousPosts);
+        queryClient.setQueryData(
+          [QueryKey.POSTS, queryKey],
+          context.previousPosts
+        );
       }
     },
     onSettled: (): void => {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.POSTS],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POSTS] });
     },
   });
 };
