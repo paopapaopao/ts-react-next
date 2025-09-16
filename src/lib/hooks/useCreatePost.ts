@@ -23,19 +23,11 @@ type Params = {
   query: null;
 };
 
-export const useCreatePost = ({
-  userId,
-  clerkUserId,
-  query,
-}: Params): UseMutationResult<
-  PostMutation,
-  Error,
-  PostSchema,
-  PostsContext
-> => {
+export const useCreatePost = (
+  queryKey: Params
+): UseMutationResult<PostMutation, Error, PostSchema, PostsContext> => {
   const queryClient = useQueryClient();
   const { signedInUser } = useSignedInUser();
-  const queryKey = { userId, clerkUserId, query };
 
   return useMutation({
     mutationFn: async (payload: PostSchema): Promise<PostMutation> => {
