@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
@@ -23,10 +18,9 @@ export const Actions = (): ReactNode => {
   const { post, hasComments, onModeToggle } = usePostCard();
 
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = useParams();
-  const queryKey = getPostQueryKey(pathname, searchParams, params);
-  const { mutate: deletePost } = useDeletePost(queryKey, pathname);
+  const queryKey = getPostQueryKey();
+
+  const { mutate: deletePost } = useDeletePost(queryKey);
 
   const { push } = useRouter();
 
