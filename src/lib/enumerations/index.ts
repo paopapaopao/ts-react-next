@@ -39,6 +39,7 @@ export enum QueryKey {
 }
 
 export enum QueryContextKey {
+  DATA = 'previousData',
   POST = 'previousPost',
   POSTS = 'previousPosts',
   COMMENTS = 'previousComments',

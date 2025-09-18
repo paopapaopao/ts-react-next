@@ -9,9 +9,9 @@ import {
 
 import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type {
-  PaoPostContext,
   PostInfiniteQuery,
   PostMutation,
+  PostPostsContext,
   PostQuery,
   PostQueryKeyParams,
   PostVariables,
@@ -20,7 +20,7 @@ import type {
 
 export const useUpdatePost = (
   queryKey: PostQueryKeyParams
-): UseMutationResult<PostMutation, Error, PostVariables, PaoPostContext> => {
+): UseMutationResult<PostMutation, Error, PostVariables, PostPostsContext> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -45,7 +45,7 @@ export const useUpdatePost = (
     onMutate: async ({
       id,
       payload,
-    }: PostVariables): Promise<PaoPostContext | undefined> => {
+    }: PostVariables): Promise<PostPostsContext | undefined> => {
       await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS, queryKey] });
 
       const previousData = queryClient.getQueryData<
@@ -112,7 +112,7 @@ export const useUpdatePost = (
     onError: (
       _error,
       _variables,
-      context: PaoPostContext | undefined
+      context: PostPostsContext | undefined
     ): void => {
       if (context?.previousData !== undefined) {
         queryClient.setQueryData(

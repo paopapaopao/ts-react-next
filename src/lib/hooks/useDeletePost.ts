@@ -9,9 +9,9 @@ import {
 
 import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type {
-  PaoPostContext,
   PostInfiniteQuery,
   PostMutation,
+  PostPostsContext,
   PostQuery,
   PostQueryKeyParams,
   PostWithRelationsAndRelationCountsAndUserReaction,
@@ -23,7 +23,7 @@ export const useDeletePost = (
   PostMutation,
   Error,
   number | undefined,
-  PaoPostContext
+  PostPostsContext
 > => {
   const queryClient = useQueryClient();
 
@@ -43,7 +43,7 @@ export const useDeletePost = (
     },
     onMutate: async (
       id: number | undefined
-    ): Promise<PaoPostContext | undefined> => {
+    ): Promise<PostPostsContext | undefined> => {
       await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS, queryKey] });
 
       const previousData = queryClient.getQueryData<
@@ -91,7 +91,7 @@ export const useDeletePost = (
 
       return { previousData };
     },
-    onError: (_error, _id, context: PaoPostContext | undefined): void => {
+    onError: (_error, _id, context: PostPostsContext | undefined): void => {
       if (context?.previousData !== undefined) {
         queryClient.setQueryData(
           [QueryKey.POSTS, queryKey],

@@ -29,6 +29,11 @@ export type PostsContext = Context<
   InfiniteData<PostInfiniteQuery, number | null>
 >;
 
+export type PostPostsContext = Context<
+  QueryContextKey.DATA,
+  PostQuery | InfiniteData<PostInfiniteQuery, number | null>
+>;
+
 export type CommentsContext = Context<
   QueryContextKey.COMMENTS,
   InfiniteData<CommentInfiniteQuery, number | null>
