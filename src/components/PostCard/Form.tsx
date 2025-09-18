@@ -6,10 +6,9 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useUpdatePost } from '@/lib/hooks';
+import { usePostQueryKey, useUpdatePost } from '@/lib/hooks';
 import { postSchema } from '@/lib/schemas';
 import type { PostSchema } from '@/lib/types';
-import { getPostQueryKey } from '@/lib/utilities';
 
 import { Button } from '../Button/Button';
 
@@ -35,7 +34,7 @@ export const Form = (): ReactNode => {
     },
   });
 
-  const queryKey = getPostQueryKey();
+  const queryKey = usePostQueryKey();
 
   const { mutate: updatePost } = useUpdatePost(queryKey);
 

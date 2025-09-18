@@ -1,17 +1,19 @@
 'use client';
 
 import clsx from 'clsx';
-import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useCreateComment, useSignedInUser } from '@/lib/hooks';
+import {
+  useCreateComment,
+  usePostQueryKey,
+  useSignedInUser,
+} from '@/lib/hooks';
 import { commentSchema } from '@/lib/schemas';
 import type { CommentSchema } from '@/lib/types';
-import { getPostQueryKey } from '@/lib/utilities';
 
 import { usePostCard } from '../PostCard/usePostCard';
 
@@ -37,10 +39,7 @@ export const CommentForm = ({ parentCommentId = null }: Props): ReactNode => {
     },
   });
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = useParams();
-  const postQueryKey = getPostQueryKey(pathname, searchParams, params);
+  const postQueryKey = usePostQueryKey();
   const { mutate: createComment } = useCreateComment(postQueryKey);
 
   const onSubmit = (data: CommentSchema): void => {

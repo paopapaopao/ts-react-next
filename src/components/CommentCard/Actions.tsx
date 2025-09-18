@@ -1,13 +1,11 @@
 'use client';
 
-import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
-import { useDeleteComment } from '@/lib/hooks';
-import { getPostQueryKey } from '@/lib/utilities';
+import { useDeleteComment, usePostQueryKey } from '@/lib/hooks';
 
 import { Button } from '../Button/Button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui';
@@ -17,10 +15,7 @@ import { useCommentCard } from './useCommentCard';
 export const Actions = (): ReactNode => {
   const { comment, type, hasReplies, onModeToggle } = useCommentCard();
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = useParams();
-  const postQueryKey = getPostQueryKey(pathname, searchParams, params);
+  const postQueryKey = usePostQueryKey();
 
   const { mutate: deleteComment } = useDeleteComment(
     comment?.postId,
