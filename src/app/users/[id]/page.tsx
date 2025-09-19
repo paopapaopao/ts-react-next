@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { type Metadata } from 'next';
-import { type JSX } from 'react';
+import { type JSX, use } from 'react';
 
 import { PostList } from '@/components';
 
@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 const Page = ({ params }: Props): JSX.Element => {
-  const { id } = params;
+  const { id } = use(params);
 
   const classNames = clsx(
     'p-2 flex flex-col items-center gap-4',
