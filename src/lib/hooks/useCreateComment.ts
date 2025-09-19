@@ -124,17 +124,13 @@ export const useCreateComment = (
       _error,
       { postId, parentCommentId }: CommentSchema
     ): void => {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.COMMENTS, postId],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENTS, postId] });
 
       if (parentCommentId === null) {
-        queryClient.invalidateQueries({ queryKey: postQueryKey, exact: true });
+        queryClient.invalidateQueries({ queryKey: [QueryKey.POSTS] });
       } else {
         queryClient.invalidateQueries({
           queryKey: [QueryKey.COMMENTS, postId, parentCommentId],
-          exact: true,
         });
       }
     },
