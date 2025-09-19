@@ -10,8 +10,8 @@ import { QueryKey } from '../enumerations';
 import type { CommentInfiniteQuery, PageParam } from '../types';
 
 export const useReadReplies = (
-  postId: number | undefined,
-  commentId: number | undefined
+  postId?: number,
+  commentId?: number
 ): UseInfiniteQueryResult<
   InfiniteData<CommentInfiniteQuery, number | null>,
   Error

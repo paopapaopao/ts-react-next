@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { HttpRequestMethod } from '../enumerations';
+import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type {
   CommentInfiniteQuery,
   CommentMutation,
@@ -48,10 +48,8 @@ export const useUpdateComment = (): UseMutationResult<
       id,
       payload,
     }: CommentVariables): Promise<CommentsContext | undefined> => {
-      const queryKey = getCommentQueryKey(
-        payload.postId,
-        payload.parentCommentId
-      );
+      const { postId, parentCommentId } = payload;
+      const queryKey = getCommentQueryKey(postId, parentCommentId);
 
       await queryClient.cancelQueries({ queryKey });
 
@@ -105,21 +103,16 @@ export const useUpdateComment = (): UseMutationResult<
       context: CommentsContext | undefined
     ): void => {
       if (context?.previousComments !== undefined) {
-        const queryKey = getCommentQueryKey(
-          payload.postId,
-          payload.parentCommentId
-        );
+        const { postId, parentCommentId } = payload;
+        const queryKey = getCommentQueryKey(postId, parentCommentId);
 
         queryClient.setQueryData(queryKey, context.previousComments);
       }
     },
     onSettled: (_data, _error, { payload }: CommentVariables): void => {
-      const queryKey = getCommentQueryKey(
-        payload.postId,
-        payload.parentCommentId
-      );
+      const { postId } = payload;
 
-      queryClient.invalidateQueries({ queryKey, exact: true });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENTS, postId] });
     },
   });
 };

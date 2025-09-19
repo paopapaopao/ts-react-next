@@ -13,15 +13,12 @@ import type {
   CommentMutation,
   CommentSchema,
   CommentsContext,
-  PostQueryKeyParams,
 } from '../types';
 import { getCommentQueryKey } from '../utilities';
 
 import { useSignedInUser } from './useSignedInUser';
 
-export const useCreateComment = (
-  postQueryKey: PostQueryKeyParams
-): UseMutationResult<
+export const useCreateComment = (): UseMutationResult<
   CommentMutation,
   Error,
   CommentSchema,
@@ -124,18 +121,10 @@ export const useCreateComment = (
       _error,
       { postId, parentCommentId }: CommentSchema
     ): void => {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.COMMENTS, postId],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENTS, postId] });
 
       if (parentCommentId === null) {
-        queryClient.invalidateQueries({ queryKey: postQueryKey, exact: true });
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: [QueryKey.COMMENTS, postId, parentCommentId],
-          exact: true,
-        });
+        queryClient.invalidateQueries({ queryKey: [QueryKey.POSTS] });
       }
     },
   });

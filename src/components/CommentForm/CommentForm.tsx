@@ -7,11 +7,7 @@ import { BiSend } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import {
-  useCreateComment,
-  usePostQueryKey,
-  useSignedInUser,
-} from '@/lib/hooks';
+import { useCreateComment, useSignedInUser } from '@/lib/hooks';
 import { commentSchema } from '@/lib/schemas';
 import type { CommentSchema } from '@/lib/types';
 
@@ -39,8 +35,7 @@ export const CommentForm = ({ parentCommentId = null }: Props): ReactNode => {
     },
   });
 
-  const postQueryKey = usePostQueryKey();
-  const { mutate: createComment } = useCreateComment(postQueryKey);
+  const { mutate: createComment } = useCreateComment();
 
   const onSubmit = (data: CommentSchema): void => {
     createComment(data, {
