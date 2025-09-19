@@ -13,22 +13,25 @@ import type {
   CommentMutation,
   CommentsContext,
   CommentWithRelationsAndRelationCountsAndUserReaction,
-  PostQueryKeyParams,
 } from '../types';
 import { getCommentQueryKey } from '../utilities';
 
-export const useDeleteComment = (
-  postId: number | undefined,
-  parentCommentId: number | null | undefined,
-  postQueryKey: PostQueryKeyParams
-): UseMutationResult<
+type Params = {
+  postId?: number;
+  parentCommentId?: number | null;
+};
+
+export const useDeleteComment = ({
+  postId,
+  parentCommentId,
+}: Params): UseMutationResult<
   CommentMutation,
   Error,
   number | undefined,
   CommentsContext
 > => {
   const queryClient = useQueryClient();
-  const commentQueryKey = getCommentQueryKey(postId, parentCommentId);
+  const queryKey = getCommentQueryKey(postId, parentCommentId);
 
   return useMutation({
     mutationFn: async (id: number | undefined): Promise<CommentMutation> => {
@@ -47,15 +50,15 @@ export const useDeleteComment = (
     onMutate: async (
       id: number | undefined
     ): Promise<CommentsContext | undefined> => {
-      await queryClient.cancelQueries({ queryKey: commentQueryKey });
+      await queryClient.cancelQueries({ queryKey });
 
       const previousComments =
         queryClient.getQueryData<
           InfiniteData<CommentInfiniteQuery, number | null>
-        >(commentQueryKey);
+        >(queryKey);
 
       queryClient.setQueryData(
-        commentQueryKey,
+        queryKey,
         // TODO
         (
           oldComments:
@@ -93,22 +96,14 @@ export const useDeleteComment = (
     },
     onError: (_error, _id, context: CommentsContext | undefined): void => {
       if (context?.previousComments !== undefined) {
-        queryClient.setQueryData(commentQueryKey, context.previousComments);
+        queryClient.setQueryData(queryKey, context.previousComments);
       }
     },
     onSettled: (): void => {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.COMMENTS, postId],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENTS, postId] });
 
       if (parentCommentId === null) {
-        queryClient.invalidateQueries({ queryKey: postQueryKey, exact: true });
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: [QueryKey.COMMENTS, postId, parentCommentId],
-          exact: true,
-        });
+        queryClient.invalidateQueries({ queryKey: [QueryKey.POSTS] });
       }
     },
   });
