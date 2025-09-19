@@ -17,7 +17,7 @@ export const useReadReplies = (
   Error
 > => {
   return useInfiniteQuery({
-    queryKey: [QueryKey.REPLIES, postId, commentId],
+    queryKey: [QueryKey.COMMENTS, postId, commentId],
     queryFn: async ({
       pageParam,
     }: PageParam): Promise<CommentInfiniteQuery> => {

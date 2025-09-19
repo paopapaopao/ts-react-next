@@ -13,13 +13,14 @@ import type {
   CommentMutation,
   CommentsContext,
   CommentWithRelationsAndRelationCountsAndUserReaction,
+  PostQueryKeyParams,
 } from '../types';
 import { getCommentQueryKey } from '../utilities';
 
 export const useDeleteComment = (
   postId: number | undefined,
   parentCommentId: number | null | undefined,
-  postQueryKey: (string | number)[]
+  postQueryKey: PostQueryKeyParams
 ): UseMutationResult<
   CommentMutation,
   Error,
@@ -105,7 +106,7 @@ export const useDeleteComment = (
         queryClient.invalidateQueries({ queryKey: postQueryKey, exact: true });
       } else {
         queryClient.invalidateQueries({
-          queryKey: [QueryKey.REPLIES, postId, parentCommentId],
+          queryKey: [QueryKey.COMMENTS, postId, parentCommentId],
           exact: true,
         });
       }

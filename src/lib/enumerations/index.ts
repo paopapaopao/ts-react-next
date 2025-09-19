@@ -35,7 +35,6 @@ export enum ApiReadResourceCount {
 export enum QueryKey {
   POSTS = 'posts',
   COMMENTS = 'comments',
-  REPLIES = 'replies',
 }
 
 export enum QueryContextKey {

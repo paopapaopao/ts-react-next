@@ -13,13 +13,14 @@ import type {
   CommentMutation,
   CommentSchema,
   CommentsContext,
+  PostQueryKeyParams,
 } from '../types';
 import { getCommentQueryKey } from '../utilities';
 
 import { useSignedInUser } from './useSignedInUser';
 
 export const useCreateComment = (
-  postQueryKey: (string | number)[]
+  postQueryKey: PostQueryKeyParams
 ): UseMutationResult<
   CommentMutation,
   Error,
@@ -48,20 +49,18 @@ export const useCreateComment = (
     onMutate: async (
       payload: CommentSchema
     ): Promise<CommentsContext | undefined> => {
-      const commentQueryKey = getCommentQueryKey(
-        payload.postId,
-        payload.parentCommentId
-      );
+      const { postId, parentCommentId } = payload;
+      const queryKey = getCommentQueryKey(postId, parentCommentId);
 
-      await queryClient.cancelQueries({ queryKey: commentQueryKey });
+      await queryClient.cancelQueries({ queryKey });
 
       const previousComments =
         queryClient.getQueryData<
           InfiniteData<CommentInfiniteQuery, number | null>
-        >(commentQueryKey);
+        >(queryKey);
 
       queryClient.setQueryData(
-        commentQueryKey,
+        queryKey,
         // TODO
         (
           oldComments:
@@ -115,9 +114,9 @@ export const useCreateComment = (
       context: CommentsContext | undefined
     ): void => {
       if (context?.previousComments !== undefined) {
-        const commentQueryKey = getCommentQueryKey(postId, parentCommentId);
+        const queryKey = getCommentQueryKey(postId, parentCommentId);
 
-        queryClient.setQueryData(commentQueryKey, context.previousComments);
+        queryClient.setQueryData(queryKey, context.previousComments);
       }
     },
     onSettled: (
@@ -134,7 +133,7 @@ export const useCreateComment = (
         queryClient.invalidateQueries({ queryKey: postQueryKey, exact: true });
       } else {
         queryClient.invalidateQueries({
-          queryKey: [QueryKey.REPLIES, postId, parentCommentId],
+          queryKey: [QueryKey.COMMENTS, postId, parentCommentId],
           exact: true,
         });
       }
