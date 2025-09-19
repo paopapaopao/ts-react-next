@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { type Metadata } from 'next';
-import { type JSX, use } from 'react';
+import { type JSX } from 'react';
 
 import { PostList } from '@/components';
 
