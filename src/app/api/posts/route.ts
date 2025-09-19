@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 import {
   ApiReadResourceCount,
   HttpRequestMethod,
@@ -47,7 +47,7 @@ export const POST = async (
   try {
     const { parsedPayload } = parsePayloadResult;
 
-    const response = await prisma.post.create({
+    const response = await database.post.create({
       data: parsedPayload,
     });
 
@@ -121,7 +121,7 @@ export const GET = async (
         ? rawQuery
         : null;
 
-    const response = await prisma.post.findMany({
+    const response = await database.post.findMany({
       ...(cursor > 0 && {
         cursor: { id: cursor },
         skip: 1,

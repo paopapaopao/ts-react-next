@@ -13,7 +13,7 @@ type Props = {
 
 const Page = ({ params }: Props): JSX.Element => {
   const { id } = use(params);
-  const { data, error, isLoading } = useReadPost(Number(id));
+  const { data, error, isLoading } = useReadPost(id);
 
   const ref = useRef<HTMLDialogElement | null>(null);
 

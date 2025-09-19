@@ -1,13 +1,13 @@
 import { Prisma } from '@prisma/client';
 
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const readPostWithRelationsAndRelationCountsAndUserReaction = async (
   id: number,
   clerkUserId: string | null
 ) => {
-  const response = await prisma.post.findUnique({
+  const response = await database.post.findUnique({
     where: { id },
     include: {
       user: true,
@@ -45,7 +45,7 @@ const readCommentWithRelationsAndRelationCountsAndUserReaction = async (
   id: number,
   clerkUserId: string | null
 ) => {
-  const response = await prisma.comment.findUnique({
+  const response = await database.comment.findUnique({
     where: { id },
     include: {
       user: true,

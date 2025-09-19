@@ -16,6 +16,15 @@ type Variables<Id, Payload> = {
 
 type Context<Key extends string, Data> = { [key in Key]: Data | undefined };
 
+export type PostQueryKeyParams =
+  | string
+  | string[]
+  | {
+      userId: string | string[] | undefined;
+      clerkUserId: string | null | undefined;
+      query: string | null;
+    };
+
 export type PageParam = { pageParam: number | null };
 
 export type PostVariables = Variables<number | undefined, PostSchema>;
@@ -27,6 +36,11 @@ export type PostContext = Context<QueryContextKey.POST, PostQuery>;
 export type PostsContext = Context<
   QueryContextKey.POSTS,
   InfiniteData<PostInfiniteQuery, number | null>
+>;
+
+export type PostPostsContext = Context<
+  QueryContextKey.DATA,
+  PostQuery | InfiniteData<PostInfiniteQuery, number | null>
 >;
 
 export type CommentsContext = Context<

@@ -41,7 +41,8 @@ export const Interactions = (): ReactNode => {
     },
   });
 
-  const { mutate: createPost } = useCreatePost();
+  const queryKey = { userId: undefined, clerkUserId: null, query: null };
+  const { mutate: createPost } = useCreatePost(queryKey);
 
   const onSubmit = (data: PostSchema): void => {
     createPost(data, {

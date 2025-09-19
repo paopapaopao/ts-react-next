@@ -1,5 +1,6 @@
 export { useSignedInUser } from './useSignedInUser';
 
+export { usePostQueryKey } from './usePostQueryKey';
 export { useCreatePost } from './useCreatePost';
 export { useDeletePost } from './useDeletePost';
 export { useReadPost } from './useReadPost';

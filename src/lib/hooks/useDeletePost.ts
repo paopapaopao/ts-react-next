@@ -7,24 +7,23 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { HttpRequestMethod } from '../enumerations';
+import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type {
-  PostContext,
   PostInfiniteQuery,
   PostMutation,
+  PostPostsContext,
   PostQuery,
-  PostsContext,
+  PostQueryKeyParams,
   PostWithRelationsAndRelationCountsAndUserReaction,
 } from '../types';
 
 export const useDeletePost = (
-  queryKey: (string | number)[],
-  pathname: string
+  queryKey: PostQueryKeyParams
 ): UseMutationResult<
   PostMutation,
   Error,
   number | undefined,
-  PostContext | PostsContext
+  PostPostsContext
 > => {
   const queryClient = useQueryClient();
 
@@ -44,17 +43,18 @@ export const useDeletePost = (
     },
     onMutate: async (
       id: number | undefined
-    ): Promise<PostContext | PostsContext | undefined> => {
-      await queryClient.cancelQueries({ queryKey });
+    ): Promise<PostPostsContext | undefined> => {
+      await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS, queryKey] });
 
-      if (pathname === '/' || pathname === '/search') {
-        const previousPosts =
-          queryClient.getQueryData<
-            InfiniteData<PostInfiniteQuery, number | null>
-          >(queryKey);
+      const previousData = queryClient.getQueryData<
+        InfiniteData<PostInfiniteQuery, number | null> | PostQuery
+      >([QueryKey.POSTS, queryKey]);
 
+      const isAListQuery = typeof queryKey === 'object';
+
+      if (isAListQuery) {
         queryClient.setQueryData(
-          queryKey,
+          [QueryKey.POSTS, queryKey],
           // TODO
           (
             oldPosts: InfiniteData<PostInfiniteQuery, number | null> | undefined
@@ -85,39 +85,22 @@ export const useDeletePost = (
             };
           }
         );
-
-        return { previousPosts };
       } else {
-        const previousPost = queryClient.getQueryData<PostQuery>(queryKey);
-
-        queryClient.removeQueries({ queryKey });
-
-        return { previousPost };
+        queryClient.removeQueries({ queryKey: [QueryKey.POSTS, queryKey] });
       }
+
+      return { previousData };
     },
-    onError: (
-      _error,
-      _id,
-      context: PostContext | PostsContext | undefined
-    ): void => {
-      if (
-        context !== undefined &&
-        'previousPosts' in context &&
-        context.previousPosts !== undefined
-      ) {
-        queryClient.setQueryData(queryKey, context.previousPosts);
-      }
-
-      if (
-        context !== undefined &&
-        'previousPost' in context &&
-        context.previousPost !== undefined
-      ) {
-        queryClient.setQueryData(queryKey, context.previousPost);
+    onError: (_error, _id, context: PostPostsContext | undefined): void => {
+      if (context?.previousData !== undefined) {
+        queryClient.setQueryData(
+          [QueryKey.POSTS, queryKey],
+          context.previousData
+        );
       }
     },
     onSettled: (): void => {
-      queryClient.invalidateQueries({ queryKey, exact: true });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POSTS] });
     },
   });
 };

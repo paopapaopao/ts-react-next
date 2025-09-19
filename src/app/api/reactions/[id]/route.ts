@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { reactionSchema } from '@/lib/schemas';
 import type { ReactionMutation, ReactionSchema } from '@/lib/types';
@@ -41,10 +41,10 @@ export const PUT = async (
     const { userId: clerkId } = authenticateUserResult;
 
     const [user, reaction] = await Promise.all([
-      prisma.user.findUnique({
+      database.user.findUnique({
         where: { clerkId },
       }),
-      prisma.reaction.findUnique({
+      database.reaction.findUnique({
         where: { id },
       }),
     ]);
@@ -90,7 +90,7 @@ export const PUT = async (
   try {
     const { parsedPayload } = parsePayloadResult;
 
-    const response = await prisma.reaction.update({
+    const response = await database.reaction.update({
       where: { id },
       data: parsedPayload,
     });
@@ -149,10 +149,10 @@ export const DELETE = async (
     const { userId: clerkId } = authenticateUserResult;
 
     const [user, reaction] = await Promise.all([
-      prisma.user.findUnique({
+      database.user.findUnique({
         where: { clerkId },
       }),
-      prisma.reaction.findUnique({
+      database.reaction.findUnique({
         where: { id },
       }),
     ]);
@@ -187,7 +187,7 @@ export const DELETE = async (
   }
 
   try {
-    const response = await prisma.reaction.delete({
+    const response = await database.reaction.delete({
       where: { id },
     });
 

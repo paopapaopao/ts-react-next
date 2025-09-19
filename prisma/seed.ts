@@ -28,7 +28,7 @@ type DummyJSONUser = {
   image: string;
 };
 
-const prisma = new PrismaClient();
+const database = new PrismaClient();
 
 const getUsers = async (): Promise<DummyJSONUser[]> => {
   let users: DummyJSONUser[] = [];
@@ -94,19 +94,23 @@ const getComments = async (): Promise<DummyJSONComment[]> => {
 };
 
 async function main() {
-  await prisma.view.deleteMany({});
-  await prisma.reaction.deleteMany({});
-  await prisma.comment.deleteMany({});
+  await database.view.deleteMany({});
+  await database.reaction.deleteMany({});
+  await database.comment.deleteMany({});
   // *Resets the id to 1
-  await prisma.$executeRawUnsafe(
+  await database.$executeRawUnsafe(
     `ALTER SEQUENCE "Comment_id_seq" RESTART WITH 1`
   );
-  await prisma.post.deleteMany({});
+  await database.post.deleteMany({});
   // *Resets the id to 1
-  await prisma.$executeRawUnsafe(`ALTER SEQUENCE "Post_id_seq" RESTART WITH 1`);
-  await prisma.user.deleteMany({});
+  await database.$executeRawUnsafe(
+    `ALTER SEQUENCE "Post_id_seq" RESTART WITH 1`
+  );
+  await database.user.deleteMany({});
   // *Resets the id to 1
-  await prisma.$executeRawUnsafe(`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`);
+  await database.$executeRawUnsafe(
+    `ALTER SEQUENCE "User_id_seq" RESTART WITH 1`
+  );
 
   const initialUsers: DummyJSONUser[] = await getUsers();
   const initialPosts: DummyJSONPost[] = await getPosts();
@@ -116,7 +120,7 @@ async function main() {
   const initialViews: number[] = [];
 
   for (const user of initialUsers) {
-    await prisma.user.create({
+    await database.user.create({
       data: {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -127,7 +131,7 @@ async function main() {
   }
 
   for (const post of initialPosts) {
-    await prisma.post.create({
+    await database.post.create({
       data: {
         body: post.body,
         title: post.title,
@@ -144,7 +148,7 @@ async function main() {
   }
 
   for (const comment of initialComments) {
-    await prisma.comment.create({
+    await database.comment.create({
       data: {
         body: comment.body,
         postId: comment.postId,
@@ -159,7 +163,7 @@ async function main() {
     let userId = 1;
 
     for (let i = 0; i < initialPostReactions[index].likes % 10; i++) {
-      await prisma.reaction.create({
+      await database.reaction.create({
         data: {
           type: ReactionType.LIKE,
           userId,
@@ -171,7 +175,7 @@ async function main() {
     }
 
     for (let i = 0; i < initialPostReactions[index].dislikes % 10; i++) {
-      await prisma.reaction.create({
+      await database.reaction.create({
         data: {
           type: ReactionType.DISLIKE,
           userId,
@@ -187,7 +191,7 @@ async function main() {
     let userId = 1;
 
     for (let i = 0; i < initialCommentReactions[index] % 10; i++) {
-      await prisma.reaction.create({
+      await database.reaction.create({
         data: {
           type: ReactionType.LIKE,
           userId,
@@ -203,7 +207,7 @@ async function main() {
     let userId = 1;
 
     for (let i = 0; i < initialViews[index] % 10; i++) {
-      await prisma.view.create({
+      await database.view.create({
         data: {
           userId,
           postId: index + 1,
@@ -217,10 +221,10 @@ async function main() {
 
 main()
   .then(async () => {
-    await prisma.$disconnect();
+    await database.$disconnect();
   })
   .catch(async (e) => {
     console.error(e);
-    await prisma.$disconnect();
+    await database.$disconnect();
     process.exit(1);
   });

@@ -1,18 +1,12 @@
 'use client';
 
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
-import { useDeletePost } from '@/lib/hooks';
-import { getPostQueryKey } from '@/lib/utilities';
+import { useDeletePost, usePostQueryKey } from '@/lib/hooks';
 
 import { Button } from '../Button/Button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui';
@@ -23,10 +17,9 @@ export const Actions = (): ReactNode => {
   const { post, hasComments, onModeToggle } = usePostCard();
 
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = useParams();
-  const queryKey = getPostQueryKey(pathname, searchParams, params);
-  const { mutate: deletePost } = useDeletePost(queryKey, pathname);
+  const queryKey = usePostQueryKey();
+
+  const { mutate: deletePost } = useDeletePost(queryKey);
 
   const { push } = useRouter();
 

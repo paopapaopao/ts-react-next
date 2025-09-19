@@ -9,11 +9,17 @@ import {
 import { QueryKey } from '../enumerations';
 import type { PageParam, PostInfiniteQuery } from '../types';
 
-export const useReadPosts = (
-  userId?: number,
-  clerkUserId?: string | null,
-  query?: string | null
-): UseInfiniteQueryResult<
+type Params = {
+  userId?: string;
+  clerkUserId?: string | null;
+  query?: string | null;
+};
+
+export const useReadPosts = ({
+  userId,
+  clerkUserId,
+  query,
+}: Params): UseInfiniteQueryResult<
   InfiniteData<PostInfiniteQuery, number | null>,
   Error
 > => {
@@ -21,10 +27,9 @@ export const useReadPosts = (
     queryKey: [QueryKey.POSTS, { userId, clerkUserId, query }],
     queryFn: async ({ pageParam }: PageParam): Promise<PostInfiniteQuery> => {
       const params = new URLSearchParams();
-      params.append('cursor', String(pageParam));
 
       if (userId !== undefined) {
-        params.append('userId', String(userId));
+        params.append('userId', userId);
       }
 
       if (clerkUserId !== undefined && clerkUserId !== null) {
@@ -34,6 +39,8 @@ export const useReadPosts = (
       if (query !== undefined && query !== null && query.trim() !== '') {
         params.append('query', query.trim());
       }
+
+      params.append('cursor', String(pageParam));
 
       const response = await fetch(`/api/posts?${params.toString()}`);
       const result: PostInfiniteQuery = await response.json();

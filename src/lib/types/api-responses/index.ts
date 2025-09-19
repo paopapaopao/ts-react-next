@@ -11,7 +11,7 @@ import { ApiResponseDataKey } from '@/lib/enumerations';
 import type {
   CommentWithRelationsAndRelationCountsAndUserReaction,
   PostWithRelationsAndRelationCountsAndUserReaction,
-} from '../action-returns';
+} from '../database-returns';
 
 type ApiQueryResponse<Key extends string, Data> = {
   data: { [key in Key]: Data | null } | null;

@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { API_RESPONSE_MESSAGES } from '@/lib/constants';
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 import { HttpRequestMethod, HttpResponseStatusCode } from '@/lib/enumerations';
 import { postSchema } from '@/lib/schemas';
 import type { PostMutation, PostQuery, PostSchema } from '@/lib/types';
@@ -41,7 +41,7 @@ export const GET = async (
 
     const id = Number((await params).id);
 
-    const response = await prisma.post.findUnique({
+    const response = await database.post.findUnique({
       where: { id },
       include: {
         user: true,
@@ -135,10 +135,10 @@ export const PUT = async (
     const { userId: clerkId } = authenticateUserResult;
 
     const [user, post] = await Promise.all([
-      prisma.user.findUnique({
+      database.user.findUnique({
         where: { clerkId },
       }),
-      prisma.post.findUnique({
+      database.post.findUnique({
         where: { id },
       }),
     ]);
@@ -185,7 +185,7 @@ export const PUT = async (
   try {
     const { parsedPayload } = parsePayloadResult;
 
-    const response = await prisma.post.update({
+    const response = await database.post.update({
       where: { id },
       data: parsedPayload,
     });
@@ -244,10 +244,10 @@ export const DELETE = async (
     const { userId: clerkId } = authenticateUserResult;
 
     const [user, post] = await Promise.all([
-      prisma.user.findUnique({
+      database.user.findUnique({
         where: { clerkId },
       }),
-      prisma.post.findUnique({
+      database.post.findUnique({
         where: { id },
       }),
     ]);
@@ -282,7 +282,7 @@ export const DELETE = async (
   }
 
   try {
-    const response = await prisma.post.delete({
+    const response = await database.post.delete({
       where: { id },
     });
 

@@ -7,26 +7,20 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { HttpRequestMethod } from '../enumerations';
+import { HttpRequestMethod, QueryKey } from '../enumerations';
 import type {
-  PostContext,
   PostInfiniteQuery,
   PostMutation,
+  PostPostsContext,
   PostQuery,
-  PostsContext,
+  PostQueryKeyParams,
   PostVariables,
   PostWithRelationsAndRelationCountsAndUserReaction,
 } from '../types';
 
 export const useUpdatePost = (
-  queryKey: (string | number)[],
-  pathname: string
-): UseMutationResult<
-  PostMutation,
-  Error,
-  PostVariables,
-  PostContext | PostsContext
-> => {
+  queryKey: PostQueryKeyParams
+): UseMutationResult<PostMutation, Error, PostVariables, PostPostsContext> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -51,17 +45,18 @@ export const useUpdatePost = (
     onMutate: async ({
       id,
       payload,
-    }: PostVariables): Promise<PostContext | PostsContext | undefined> => {
-      await queryClient.cancelQueries({ queryKey });
+    }: PostVariables): Promise<PostPostsContext | undefined> => {
+      await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS, queryKey] });
 
-      if (pathname === '/' || pathname === '/search') {
-        const previousPosts =
-          queryClient.getQueryData<
-            InfiniteData<PostInfiniteQuery, number | null>
-          >(queryKey);
+      const previousData = queryClient.getQueryData<
+        InfiniteData<PostInfiniteQuery, number | null> | PostQuery
+      >([QueryKey.POSTS, queryKey]);
 
+      const isAListQuery = typeof queryKey === 'object';
+
+      if (isAListQuery) {
         queryClient.setQueryData(
-          queryKey,
+          [QueryKey.POSTS, queryKey],
           // TODO
           (
             oldPosts: InfiniteData<PostInfiniteQuery, number | null> | undefined
@@ -92,13 +87,9 @@ export const useUpdatePost = (
             };
           }
         );
-
-        return { previousPosts };
       } else {
-        const previousPost = queryClient.getQueryData<PostQuery>(queryKey);
-
         queryClient.setQueryData(
-          queryKey,
+          [QueryKey.POSTS, queryKey],
           // TODO
           (oldPost: PostQuery | undefined) => {
             if (oldPost === undefined) {
@@ -114,33 +105,24 @@ export const useUpdatePost = (
             };
           }
         );
-
-        return { previousPost };
       }
+
+      return { previousData };
     },
     onError: (
       _error,
       _variables,
-      context: PostContext | PostsContext | undefined
+      context: PostPostsContext | undefined
     ): void => {
-      if (
-        context !== undefined &&
-        'previousPosts' in context &&
-        context.previousPosts !== undefined
-      ) {
-        queryClient.setQueryData(queryKey, context.previousPosts);
-      }
-
-      if (
-        context !== undefined &&
-        'previousPost' in context &&
-        context.previousPost !== undefined
-      ) {
-        queryClient.setQueryData(queryKey, context.previousPost);
+      if (context?.previousData !== undefined) {
+        queryClient.setQueryData(
+          [QueryKey.POSTS, queryKey],
+          context.previousData
+        );
       }
     },
     onSettled: (): void => {
-      queryClient.invalidateQueries({ queryKey, exact: true });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POSTS] });
     },
   });
 };

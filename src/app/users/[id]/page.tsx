@@ -23,7 +23,7 @@ const Page = ({ params }: Props): JSX.Element => {
 
   return (
     <main className={classNames}>
-      <PostList userId={Number(id)} />
+      <PostList userId={id} />
     </main>
   );
 };

@@ -1,16 +1,14 @@
 'use client';
 
 import clsx from 'clsx';
-import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useUpdatePost } from '@/lib/hooks';
+import { usePostQueryKey, useUpdatePost } from '@/lib/hooks';
 import { postSchema } from '@/lib/schemas';
 import type { PostSchema } from '@/lib/types';
-import { getPostQueryKey } from '@/lib/utilities';
 
 import { Button } from '../Button/Button';
 
@@ -36,11 +34,9 @@ export const Form = (): ReactNode => {
     },
   });
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = useParams();
-  const queryKey = getPostQueryKey(pathname, searchParams, params);
-  const { mutate: updatePost } = useUpdatePost(queryKey, pathname);
+  const queryKey = usePostQueryKey();
+
+  const { mutate: updatePost } = useUpdatePost(queryKey);
 
   const onSubmit = (data: PostSchema): void => {
     updatePost(

@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import {
   type Attributes,
   type ReactNode,
@@ -18,6 +18,7 @@ import { type Post, type User, ReactionType } from '@prisma/client';
 import {
   useCreateReaction,
   useDeleteReaction,
+  usePostQueryKey,
   useSignedInUser,
   useUpdateReaction,
 } from '@/lib/hooks';
@@ -27,7 +28,7 @@ import type {
   PostWithRelationsAndRelationCountsAndUserReaction,
   ReactionSchema,
 } from '@/lib/types';
-import { getCommentQueryKey, getPostQueryKey } from '@/lib/utilities';
+import { getCommentQueryKey } from '@/lib/utilities';
 
 type Props = {
   children: ReactNode;
@@ -63,9 +64,7 @@ export const ReactionButtonGroup = ({
   });
 
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = useParams();
-  const postQueryKey = getPostQueryKey(pathname, searchParams, params);
+  const postQueryKey = usePostQueryKey();
 
   const commentQueryKey = getCommentQueryKey(
     comment?.postId,

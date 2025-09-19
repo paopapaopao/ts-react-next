@@ -17,12 +17,15 @@ import type {
 
 import { useSignedInUser } from './useSignedInUser';
 
-export const useCreatePost = (): UseMutationResult<
-  PostMutation,
-  Error,
-  PostSchema,
-  PostsContext
-> => {
+type Params = {
+  userId: undefined;
+  clerkUserId: null;
+  query: null;
+};
+
+export const useCreatePost = (
+  queryKey: Params
+): UseMutationResult<PostMutation, Error, PostSchema, PostsContext> => {
   const queryClient = useQueryClient();
   const { signedInUser } = useSignedInUser();
 
@@ -45,14 +48,14 @@ export const useCreatePost = (): UseMutationResult<
     onMutate: async (
       payload: PostSchema
     ): Promise<PostsContext | undefined> => {
-      await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS] });
+      await queryClient.cancelQueries({ queryKey: [QueryKey.POSTS, queryKey] });
 
       const previousPosts = queryClient.getQueryData<
         InfiniteData<PostInfiniteQuery, number | null>
-      >([QueryKey.POSTS]);
+      >([QueryKey.POSTS, queryKey]);
 
       queryClient.setQueryData(
-        [QueryKey.POSTS],
+        [QueryKey.POSTS, queryKey],
         // TODO
         (
           oldPosts: InfiniteData<PostInfiniteQuery, number | null> | undefined
@@ -104,14 +107,14 @@ export const useCreatePost = (): UseMutationResult<
     },
     onError: (_error, _payload, context: PostsContext | undefined): void => {
       if (context?.previousPosts !== undefined) {
-        queryClient.setQueryData([QueryKey.POSTS], context.previousPosts);
+        queryClient.setQueryData(
+          [QueryKey.POSTS, queryKey],
+          context.previousPosts
+        );
       }
     },
     onSettled: (): void => {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.POSTS],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POSTS] });
     },
   });
 };

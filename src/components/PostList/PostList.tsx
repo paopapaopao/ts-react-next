@@ -12,16 +12,12 @@ import { PostCard } from '../PostCard/PostCard';
 import { PostCardSkeleton } from '../PostCardSkeleton/PostCardSkeleton';
 
 type Props = {
-  userId?: number;
+  userId?: string;
   clerkUserId?: string | null;
   query?: string | null;
 };
 
-export const PostList = ({
-  userId,
-  clerkUserId = null,
-  query = null,
-}: Props): ReactNode => {
+export const PostList = ({ userId, clerkUserId, query }: Props): ReactNode => {
   const {
     data,
     error,
@@ -30,7 +26,7 @@ export const PostList = ({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useReadPosts(userId, clerkUserId, query);
+  } = useReadPosts({ userId, clerkUserId, query });
 
   const { inView, ref } = useInView();
 

@@ -2,7 +2,7 @@ import { type NextRequest } from 'next/server';
 import { Webhook } from 'svix';
 import { type WebhookEvent } from '@clerk/nextjs/server';
 
-import { prisma } from '@/lib/database';
+import { database } from '@/lib/database';
 import { HttpResponseStatusCode } from '@/lib/enumerations';
 
 const webhookSecret =
@@ -37,7 +37,7 @@ export const POST = async (request: NextRequest) => {
 
   if (eventType === 'user.created') {
     try {
-      await prisma.user.create({
+      await database.user.create({
         data: {
           clerkId: msg.data.id,
           firstName: msg.data.first_name,
