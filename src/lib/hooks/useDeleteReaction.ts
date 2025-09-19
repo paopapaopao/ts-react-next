@@ -15,6 +15,7 @@ import type {
   PostContext,
   PostInfiniteQuery,
   PostQuery,
+  PostQueryKeyParams,
   PostsContext,
   PostWithRelationsAndRelationCountsAndUserReaction,
   ReactionMutation,
@@ -24,7 +25,7 @@ type TContext = CommentsContext | PostContext | PostsContext;
 
 type Props = {
   parentCommentId: number | null | undefined;
-  postQueryKey: (string | number)[];
+  postQueryKey: PostQueryKeyParams;
   pathname: string;
   commentQueryKey: (number | QueryKey | undefined)[];
 };
@@ -39,7 +40,7 @@ export const useDeleteReaction = ({
 
   const queryKeyMap: Record<
     string,
-    (string | number)[] | (number | QueryKey | undefined)[]
+    PostQueryKeyParams | (number | QueryKey | undefined)[]
   > = {
     previousPosts: postQueryKey,
     previousPost: postQueryKey,
@@ -65,16 +66,17 @@ export const useDeleteReaction = ({
       const isPostReaction = parentCommentId === undefined;
 
       if (isPostReaction) {
-        await queryClient.cancelQueries({ queryKey: postQueryKey });
+        await queryClient.cancelQueries({
+          queryKey: [QueryKey.POSTS, postQueryKey],
+        });
 
         if (pathname === '/' || pathname === '/search') {
-          const previousPosts =
-            queryClient.getQueryData<
-              InfiniteData<PostInfiniteQuery, number | null>
-            >(postQueryKey);
+          const previousPosts = queryClient.getQueryData<
+            InfiniteData<PostInfiniteQuery, number | null>
+          >([QueryKey.POSTS, postQueryKey]);
 
           queryClient.setQueryData(
-            postQueryKey,
+            [QueryKey.POSTS, postQueryKey],
             // TODO
             (
               oldPosts:
@@ -114,11 +116,13 @@ export const useDeleteReaction = ({
 
           return { previousPosts };
         } else {
-          const previousPost =
-            queryClient.getQueryData<PostQuery>(postQueryKey);
+          const previousPost = queryClient.getQueryData<PostQuery>([
+            QueryKey.POSTS,
+            postQueryKey,
+          ]);
 
           queryClient.setQueryData(
-            postQueryKey,
+            [QueryKey.POSTS, postQueryKey],
             // TODO
             (oldPost: PostQuery | undefined) => {
               if (oldPost === undefined) {
@@ -194,7 +198,12 @@ export const useDeleteReaction = ({
       if (context !== undefined) {
         Object.entries(context).forEach(([key, value]) => {
           if (key in queryKeyMap && value !== undefined) {
-            queryClient.setQueryData(queryKeyMap[key], value);
+            queryClient.setQueryData(
+              Array.isArray(queryKeyMap[key])
+                ? queryKeyMap[key]
+                : [queryKeyMap[key]],
+              value
+            );
           }
         });
       }
