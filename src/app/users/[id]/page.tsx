@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 };
 
 const Page = ({ params }: Props): JSX.Element => {
-  const { id } = use(params);
+  const { id } = params;
 
   const classNames = clsx(
     'p-2 flex flex-col items-center gap-4',
