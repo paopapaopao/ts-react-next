@@ -24,7 +24,7 @@ import type {
 
 type TContext = CommentsContext | PostContext | PostsContext;
 
-type Props = {
+type Params = {
   postQueryKey: PostQueryKeyParams;
   pathname: string;
   commentQueryKey: (number | QueryKey | undefined)[];
@@ -34,7 +34,7 @@ export const useCreateReaction = ({
   postQueryKey,
   pathname,
   commentQueryKey,
-}: Props): UseMutationResult<
+}: Params): UseMutationResult<
   ReactionMutation,
   Error,
   ReactionSchema,
