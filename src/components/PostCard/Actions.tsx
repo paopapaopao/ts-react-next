@@ -21,13 +21,16 @@ export const Actions = (): ReactNode => {
 
   const { mutate: deletePost } = useDeletePost(queryKey);
 
-  const { push } = useRouter();
+  const { back } = useRouter();
 
   const handleClick = (): void => {
     deletePost(post?.id, {
       onSuccess: (): void => {
+        if (pathname.startsWith('/posts/')) {
+          back();
+        }
+
         toast.success('Post deleted successfully!');
-        push(pathname === '/search' ? '/search' : '/');
       },
       onError: (error: Error): void => {
         toast.error(Object.values(error).flat().join('. ').trim());
